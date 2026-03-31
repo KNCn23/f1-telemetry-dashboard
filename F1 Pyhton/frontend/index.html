@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>F1 Telemetri Paneli</title>
+    <!-- Modern Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div id="app" class="dashboard-container">
+      <aside id="main-sidebar" class="sidebar glass-panel">
+        <button id="close-menu-btn" class="mobile-only">✕</button>
+        <h1 class="logo" data-i18n="logo">Formula 1<br><span class="accent">Telemetry</span></h1>
+        
+        <div class="lang-toggle">
+          <button id="lang-tr" class="active">TR</button>
+          <button id="lang-en">EN</button>
+        </div>
+
+        <div class="control-group">
+          <label for="year-select" data-i18n="lbl_year">Yıl (Year)</label>
+          <select id="year-select" disabled>
+            <option data-i18n="opt_loading">Yükleniyor...</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="race-select" data-i18n="lbl_race">Yarış (Grand Prix)</label>
+          <select id="race-select" disabled>
+            <option data-i18n="opt_wait_year">Önce yıl seçin</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="session-select" data-i18n="lbl_session">Seans (Session)</label>
+          <select id="session-select" disabled>
+            <option data-i18n="opt_wait_race">Önce yarış seçin</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label data-i18n="lbl_d1">Pilot 1 (Driver 1)</label>
+          <select id="driver1-select" disabled>
+            <option data-i18n="opt_wait_session">Önce seans seçin</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label data-i18n="lbl_d2">Pilot 2 (Karşılaştırma)</label>
+          <select id="driver2-select" disabled>
+            <option value="" data-i18n="opt_none">Seçilmedi</option>
+          </select>
+        </div>
+
+        <button id="analyze-btn" class="primary-btn" disabled data-i18n="btn_analyze">Telemetriyi Analiz Et</button>
+      </aside>
+      <div id="mobile-overlay"></div>
+
+      <main class="main-content">
+        <header class="header glass-panel">
+          <button id="mobile-menu-btn" class="mobile-only">☰</button>
+          <div id="status-bar" data-i18n="status_initial">Lütfen analiz etmek istediğiniz yarışı ve pilotu seçin.</div>
+        </header>
+
+        <div id="stats-ribbon" class="stats-ribbon glass-panel hidden">
+          <!-- Kompakt Hava/Pilot Verileri (Yatay Şerit) -->
+          <div class="ribbon-group weather-group">
+             <span class="ribbon-label" data-i18n="wid_weather">🌤️ Hava</span>
+             <span class="ribbon-val"><span id="w-air">-</span>° / <span id="w-track">-</span>°</span>
+          </div>
+          <div class="ribbon-divider"></div>
+          <div class="ribbon-group d1-group">
+             <span id="d1-name" class="ribbon-driver-name">-</span>
+             <span id="d1-lap" class="ribbon-lap-time accent">-</span>
+             <span class="ribbon-meta"><span id="d1-compound">-</span> (<span id="d1-tyrelife">-</span>)</span>
+          </div>
+          <div class="ribbon-divider" id="d2-divider"></div>
+          <div class="ribbon-group d2-group hidden" id="d2-ribbon">
+             <span id="d2-name" class="ribbon-driver-name">-</span>
+             <span id="d2-lap" class="ribbon-lap-time accent">-</span>
+             <span class="ribbon-meta"><span id="d2-compound">-</span> (<span id="d2-tyrelife">-</span>)</span>
+          </div>
+        </div>
+
+        <section class="dashboard-content-area">
+          <div id="loading-overlay" class="hidden glass-panel">
+            <div class="spinner"></div>
+            <p data-i18n="loading_text">Veriler işleniyor (İlk yükleme 30-40 sn sürebilir)...</p>
+          </div>
+          
+          <!-- Sol Akış Sütunu: Telemetri Grafikleri (Scrollable) -->
+          <div class="telemetry-scroll-pane">
+            <div class="chart-container glass-panel mini-chart">
+              <h2 data-i18n="chart_speed">Hız Telemetrisi</h2>
+              <div class="canvas-wrapper">
+                <canvas id="speed-chart"></canvas>
+              </div>
+            </div>
+            <div class="chart-container glass-panel mini-chart">
+              <h2 data-i18n="chart_gear">Vites (Gear)</h2>
+              <div class="canvas-wrapper">
+                <canvas id="gear-chart"></canvas>
+              </div>
+            </div>
+            <div class="chart-container glass-panel mini-chart">
+              <h2 data-i18n="chart_throttle">Gaz Pedalı</h2>
+              <div class="canvas-wrapper">
+                <canvas id="throttle-chart"></canvas>
+              </div>
+            </div>
+            <div class="chart-container glass-panel mini-chart">
+              <h2 data-i18n="chart_rpm">Motor Devri (RPM)</h2>
+              <div class="canvas-wrapper">
+                <canvas id="rpm-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Merkez Odak: Pist Haritası -->
+          <div class="map-focus-pane">
+            <div class="chart-container glass-panel track-box">
+              <div class="track-header">
+                <h2 data-i18n="chart_track">🏁 Pist Haritası (Kıyaslama)</h2>
+              </div>
+              <div class="canvas-wrapper">
+                <canvas id="track-map-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside id="leaderboard-sidebar" class="sidebar right-sidebar glass-panel hidden">
+        <h2 class="sidebar-title" data-i18n="title_leaderboard">🏆 Klasman</h2>
+        <div class="leaderboard-list" id="leaderboard-list">
+           <!-- Javascript tarafından dinamik doldurulacak -->
+        </div>
+      </aside>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
