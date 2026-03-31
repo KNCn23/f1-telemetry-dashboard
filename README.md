@@ -48,13 +48,6 @@ npm run dev
 
 ---
 
-## 🚀 Deployment / Yayına Alma
-Follow the instructions in [deployment_guide.md](./deployment_guide.md) to launch your own dashboard globally!
-
-Kendi dashboard'unuzu dünyaya açmak için [deployment_guide.md](./deployment_guide.md) dosyasındaki adımları takip edin!
-
----
-
 ## 🤝 Contributing / Katkıda Bulunma
 Pull requests are welcome! Feel free to open issues for bugs or feature requests.
 
