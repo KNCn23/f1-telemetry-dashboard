@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.env
+*.egg-info/
+dist/
+build/
+.cache/
+
+# Node
+node_modules/
+dist/
+.vite/
+*.local
+
+# macOS
+.DS_Store
+
+# FastF1 cache
+fastf1_cache/
